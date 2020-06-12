@@ -1,11 +1,11 @@
 name: BlockShuffle
-main: dev.ainterr.minecraft.blockshuffle.BlockShuffle
+main: dev.ainterr.minecraft.blockshuffle.Game
 version: 0.1.0
 api-version: 1.15
 commands:
   block-shuffle-start:
-    description: Start the Block Shuffle minigame
+    description: Start the BlockShuffle minigame
     usage: /<command>
   block-shuffle-stop:
-    description: Stop the Block Shuffle minigame
+    description: Stop the BlockShuffle minigame
     usage: /<command>
