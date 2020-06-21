@@ -6,9 +6,19 @@ commands:
   block-shuffle-start:
     description: Start the BlockShuffle minigame
     usage: /<command>
+    permission: op
   block-shuffle-stop:
     description: Stop the BlockShuffle minigame
     usage: /<command>
+    permission: op
+  block-shuffle-skip:
+    description: Skip the current round of BlockShuffle
+    usage: /<command>
+    permission: op
   block-shuffle-configure:
     description: Set various BlockShuffle configuration parameters
     usage: /<command> {parameter} [{arguments} ...]
+    permission: op
+  block-shuffle-block:
+    description: Remind yourself which block you've been assigned by BlockShuffle
+    usage: /<command>

@@ -51,14 +51,16 @@ public final class Game extends JavaPlugin {
         this.running = true;
     }
 
-    public void endRound() {
-        for(Player player: this.players.getPlayers()) {
-            if(this.players.getStatus(player) == PlayerList.STATUS_FAILURE) {
-                Bukkit.broadcastMessage(
-                    ChatColor.RED
-                    + player.getName() + " failed to find "
-                    + this.players.getBlock(player)
-                );
+    public void endRound(boolean grace) {
+        if(!grace) {
+            for(Player player: this.players.getPlayers()) {
+                if(this.players.getStatus(player) == PlayerList.STATUS_FAILURE) {
+                    Bukkit.broadcastMessage(
+                        ChatColor.RED
+                        + player.getName() + " failed to find "
+                        + this.players.getBlock(player)
+                    );
+                }
             }
         }
 
@@ -68,6 +70,10 @@ public final class Game extends JavaPlugin {
         this.running = false;
     }
 
+    public void endRound() {
+        this.endRound(false);
+    }
+
     private void startGame() {
         Bukkit.broadcastMessage("welcome to BlockShuffle");
 
@@ -75,7 +81,7 @@ public final class Game extends JavaPlugin {
     }
 
     private void stopGame() {
-        this.endRound();
+        this.endRound(true);
 
         Bukkit.broadcastMessage("BlockShuffle game over");
     }
@@ -99,6 +105,17 @@ public final class Game extends JavaPlugin {
             }
 
             this.stopGame();
+
+            return true;
+        }
+        else if(command.getName().equalsIgnoreCase("block-shuffle-skip")) {
+            if(!this.running) {
+                sender.sendMessage("you're not currently playing BlockShuffle");
+                return true;
+            }
+
+            this.endRound(true);
+            this.startRound();
 
             return true;
         }
@@ -130,6 +147,24 @@ public final class Game extends JavaPlugin {
                     sender.sendMessage("unknown configuration parameter '" + args[0] + "'");
             }
 
+            return true;
+        }
+        else if(command.getName().equalsIgnoreCase("block-shuffle-block")) {
+            if(!this.running) {
+                sender.sendMessage("you're not currently playing BlockShuffle");
+                return true;
+            }
+
+            Player player = (Player) sender;
+
+            String block = this.players.getBlock(player);
+
+            if(block == "") {
+                sender.sendMessage("you're not a player in the current game of BlockShuffle");
+                return true;
+            }
+
+            sender.sendMessage(player.getName() + " you must find " + block);
             return true;
         }
 

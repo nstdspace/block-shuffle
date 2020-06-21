@@ -16,6 +16,9 @@ YouTuber Dream's [video](https://www.youtube.com/watch?v=p34C7fNFgTA).
 
 ## Usage
 
+Server operators may use the following commands to control the BlockShuffle
+game.
+
 To start a game of BlockShuffle, run:
 
 ```
@@ -28,6 +31,12 @@ To stop a running game of BlockShuffle, run:
 block-shuffle-stop
 ```
 
+To skip the current block (for all players), run:
+
+```
+block-shuffle-skip
+```
+
 ### Configuration
 
 The default BlockShuffle interval is 5 minutes - to set the interval (for
@@ -35,6 +44,15 @@ example, to 10 minutes), run:
 
 ```
 block-shuffle-configure interval 600
+```
+
+### User Commands
+
+Non-operators can remind themselves which block they have been assigned by
+running:
+
+```
+block-shuffle-block
 ```
 
 ## Contributing
