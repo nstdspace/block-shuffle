@@ -46,6 +46,15 @@ example, to 10 minutes), run:
 block-shuffle-configure interval 600
 ```
 
+BlockShuffle currently features two game modes - the default mode where each
+player is assigned a different block randomly, and a race mode where all
+players are assigned the same block and the first player to find the block
+wins. To set the game mode (for example, to race mode), run:
+
+```
+block-shuffle-configure mode race
+```
+
 ### User Commands
 
 Non-operators can remind themselves which block they have been assigned by

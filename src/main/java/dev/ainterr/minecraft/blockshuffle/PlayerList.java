@@ -39,7 +39,7 @@ public class PlayerList {
         this.initializePlayer(player);
     }
 
-    public int newBlock(Player player) {
+    public int newBlock(Player player, Material selection) {
         if(!this.existsPlayer(player)) {
             return this.RETURN_FAILURE;
         }
@@ -51,7 +51,6 @@ public class PlayerList {
         }
 
         Random r = new Random();
-        Material selection = null;
 
         while(selection == null) {
             selection = Material.values()[r.nextInt(Material.values().length)];
@@ -65,6 +64,10 @@ public class PlayerList {
         this.status.put(player, this.STATUS_FAILURE);
         
         return this.RETURN_SUCCESS;
+    }
+
+    public int newBlock(Player player) {
+        return this.newBlock(player, null);
     }
 
     private boolean checkBlock(Player player) {
@@ -111,6 +114,14 @@ public class PlayerList {
         }
 
         return found;
+    }
+
+    public Material getBlockMaterial(Player player) {
+        if(!this.existsPlayer(player)) {
+            return null;
+        }
+
+        return this.blocks.get(player);
     }
 
     public String getBlock(Player player) {

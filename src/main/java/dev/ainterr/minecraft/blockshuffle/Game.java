@@ -22,18 +22,75 @@ import org.bukkit.ChatColor;
 import org.bukkit.Bukkit;
 
 
+abstract class GameMode {
+    void startRound() { }
+    /* Called when a round starts.
+
+    This is useful to reset the game mode's internals at the beginning of the
+    round. This method is optional and does nothing by default.
+    */
+
+    abstract void assignBlock(PlayerList players, Player player);
+    /* Called for each active player at round start. */
+
+    abstract boolean isRoundOver(PlayerList players);
+    /* Called when a player successfully finds their block. 
+    
+    This method should return ``true`` if the round should be ended and
+    ``false`` otherwise. It is used for ending a round before the timer is over
+    in cases where one or more players has found their block.
+    */
+}
+
+class DefaultGameMode extends GameMode {
+    void assignBlock(PlayerList players, Player player) {
+        players.newBlock(player);
+    }
+
+    boolean isRoundOver(PlayerList players) {
+        return players.getAllStatus() == PlayerList.STATUS_SUCCESS;
+    }
+}
+
+class RaceGameMode extends GameMode {
+    private Material block;
+
+    void startRound() {
+        this.block = null;
+    }
+
+    void assignBlock(PlayerList players, Player player) {
+        if(this.block == null) {
+            players.newBlock(player);
+            this.block = players.getBlockMaterial(player);
+        }
+        else {
+            players.newBlock(player, this.block);
+        }
+    }
+
+    boolean isRoundOver(PlayerList players) {
+        return true;
+    }
+}
+
+
 public final class Game extends JavaPlugin {
     public static BlockBlacklist BLACKLIST = new BlockBlacklist();
     public PlayerList players = new PlayerList();
 
     private int interval = 300;
+    public GameMode mode = new DefaultGameMode();
+
     private boolean running = false;
 
     public void startRound() {
+        this.mode.startRound();
+
         for(Player player: Bukkit.getServer().getOnlinePlayers()) {
             this.players.addPlayer(player);
 
-            this.players.newBlock(player);
+            this.mode.assignBlock(this.players, player);
             String block = this.players.getBlock(player);
 
             player.sendMessage(
@@ -143,6 +200,24 @@ public final class Game extends JavaPlugin {
                         sender.sendMessage("invalid interval value '"+ args[1] + "'");
                     }
                     break;
+                case "mode":
+                    if(args.length != 2) {
+                        return false;
+                    }
+
+                    switch(args[1]) {
+                        case "default":
+                            this.mode = new DefaultGameMode();
+                            sender.sendMessage("set the BlockShuffle game mode to 'default'");
+                            break;
+                        case "race":
+                            this.mode = new RaceGameMode();
+                            sender.sendMessage("set the BlockShuffle game mode to 'race'");
+                            break;
+                        default:
+                            sender.sendMessage("unknown game mode '" + args[1] + "' - available modes: default, race");
+                    }
+                    break;
                 default:
                     sender.sendMessage("unknown configuration parameter '" + args[0] + "'");
             }
@@ -202,7 +277,7 @@ class MovementListener implements Listener {
                 + player.getName() + " found " + this.plugin.players.getBlock(player)
             );
 
-            if(this.plugin.players.getAllStatus() == PlayerList.STATUS_SUCCESS) {
+            if(this.plugin.mode.isRoundOver(this.plugin.players)) {
                 this.plugin.endRound();
                 this.plugin.startRound();
             }
