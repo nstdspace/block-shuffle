@@ -7,6 +7,12 @@
   <version>0.1.0</version>
   <name>block-shuffle</name>
   <description>The BlockShuffle Minecraft minigame</description>
+  <licenses>
+    <license>
+      <name>MIT License</name>
+      <url>https://github.com/ainterr/block-shuffle/LICENSE.txt</url>
+    </license>
+  </licenses>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
