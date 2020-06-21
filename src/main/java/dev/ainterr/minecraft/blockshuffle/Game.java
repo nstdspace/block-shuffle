@@ -26,6 +26,7 @@ public final class Game extends JavaPlugin {
     public static BlockBlacklist BLACKLIST = new BlockBlacklist();
     public PlayerList players = new PlayerList();
 
+    private int interval = 300;
     private boolean running = false;
 
     public void startRound() {
@@ -45,7 +46,7 @@ public final class Game extends JavaPlugin {
             new MovementListener(this), this
         );
 
-        new Countdown(this).runTaskTimer(this, 30*20, 20);
+        new Countdown(this).runTaskTimer(this, this.interval * 20, 20);
 
         this.running = true;
     }
@@ -101,6 +102,36 @@ public final class Game extends JavaPlugin {
 
             return true;
         }
+        else if(command.getName().equalsIgnoreCase("block-shuffle-configure")) {
+            if(this.running) {
+                sender.sendMessage("a game of BlockShuffle is already in progress - stop the game to change configuration values");
+                return true;
+            }
+
+            if(args.length < 1) {
+                return false;
+            }
+
+            switch (args[0]) {
+                case "interval":
+                    if(args.length != 2) {
+                        return false;
+                    }
+                    
+                    try {
+                        this.interval = Integer.parseInt(args[1]);
+                        sender.sendMessage("BlockShuffle interval set to " + this.interval + "s");
+                    }
+                    catch(NumberFormatException error) {
+                        sender.sendMessage("invalid interval value '"+ args[1] + "'");
+                    }
+                    break;
+                default:
+                    sender.sendMessage("unknown configuration parameter '" + args[0] + "'");
+            }
+
+            return true;
+        }
 
         return false;
     }
@@ -126,8 +157,7 @@ class MovementListener implements Listener {
             return;
         }
 
-        Player player = event.getPlayer();
-
+        Player player = event.getPlayer(); 
         int status = this.plugin.players.getStatus(player);
         boolean found = this.plugin.players.isBlockFound(player);
 
@@ -163,7 +193,7 @@ class Countdown extends BukkitRunnable {
             );
         }
         else {
-            new Shuffle(this.plugin).runTaskLater(this.plugin, 1*20);
+            new Shuffle(this.plugin).runTaskLater(this.plugin, 1 * 20);
             this.cancel();
         }
     }

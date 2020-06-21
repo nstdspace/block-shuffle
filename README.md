@@ -28,6 +28,15 @@ To stop a running game of BlockShuffle, run:
 block-shuffle-stop
 ```
 
+### Configuration
+
+The default BlockShuffle interval is 5 minutes - to set the interval (for
+example, to 10 minutes), run:
+
+```
+block-shuffle-configure interval 600
+```
+
 ## Contributing
 
 Pull requests and issues are more than welcome.

@@ -9,3 +9,6 @@ commands:
   block-shuffle-stop:
     description: Stop the BlockShuffle minigame
     usage: /<command>
+  block-shuffle-configure:
+    description: Set various BlockShuffle configuration parameters
+    usage: /<command> {parameter} [{arguments} ...]
