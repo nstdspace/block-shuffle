@@ -6,7 +6,7 @@
   <packaging>jar</packaging>
   <version>0.1.0</version>
   <name>block-shuffle</name>
-  <description>The Block Shuffle Minecraft minigame</description>
+  <description>The BlockShuffle Minecraft minigame</description>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
