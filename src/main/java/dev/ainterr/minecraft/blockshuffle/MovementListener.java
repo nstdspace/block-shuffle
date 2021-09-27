@@ -25,16 +25,17 @@ class MovementListener implements Listener {
         }
 
         Player player = event.getPlayer();
-        int status = this.plugin.players.getStatus(player);
-        boolean found = this.plugin.players.isBlockFound(player);
+        PlayerList players = this.plugin.getPlayers();
+        int status = players.getStatus(player);
+        boolean found = players.isBlockFound(player);
 
         if (found && status != PlayerList.STATUS_SUCCESS) {
             Bukkit.broadcastMessage(
                     ChatColor.GOLD
-                            + player.getName() + " found " + this.plugin.players.getBlock(player)
+                            + player.getName() + " found " + players.getBlock(player)
             );
 
-            if (this.plugin.mode.isRoundOver(this.plugin.players)) {
+            if (this.plugin.getMode().isRoundOver(players)) {
                 this.plugin.endRound();
                 this.plugin.startRound();
             }

@@ -18,7 +18,7 @@ public class Countdown extends BukkitRunnable {
             timeUntilEnd--;
             Bukkit.broadcastMessage("BlockShuffle round over in " + timeUntilEnd + " ...");
         } else {
-            new Shuffle(this.plugin).runTaskLater(this.plugin, 1 * 20);
+            new Shuffle(this.plugin).runTaskLater(this.plugin, 20L);
             this.cancel();
         }
     }

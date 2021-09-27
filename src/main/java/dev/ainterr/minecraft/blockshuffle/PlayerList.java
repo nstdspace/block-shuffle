@@ -1,12 +1,12 @@
 package dev.ainterr.minecraft.blockshuffle;
 
-import java.util.HashMap;
-import java.util.Set;
-import java.util.Random;
-
-import org.bukkit.entity.Player;
-import org.bukkit.Material;
 import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.entity.Player;
+
+import java.util.HashMap;
+import java.util.Random;
+import java.util.Set;
 
 
 public class PlayerList {
@@ -30,7 +30,7 @@ public class PlayerList {
     }
 
     public void addPlayer(Player player) {
-        if(this.existsPlayer(player)) {
+        if (this.existsPlayer(player)) {
             return;
         }
 
@@ -38,19 +38,19 @@ public class PlayerList {
     }
 
     public int newBlock(Player player, Material selection) {
-        if(!this.existsPlayer(player)) {
+        if (!this.existsPlayer(player)) {
             return RETURN_FAILURE;
         }
-        
+
         this.initializePlayer(player);
 
-        if(!player.isOnline()) {
+        if (!player.isOnline()) {
             return RETURN_FAILURE;
         }
 
         Random r = new Random();
 
-        while(selection == null) {
+        while (selection == null) {
             selection = Material.values()[r.nextInt(Material.values().length)];
 
             if (!selection.isBlock() || BlockBlacklists.DEFAULT_BLACK_LIST.contains(selection)) {
@@ -60,7 +60,7 @@ public class PlayerList {
 
         this.blocks.put(player, selection);
         this.status.put(player, STATUS_FAILURE);
-        
+
         return RETURN_SUCCESS;
     }
 
@@ -73,41 +73,36 @@ public class PlayerList {
 
         Material target = this.blocks.get(player);
 
-        Material block = location.getBlock().getType();
+         Material block = location.getBlock().getType();
 
-        if(block == target) {
+        if (block == target) {
             return true;
         }
 
         block = location.clone().subtract(0, 1, 0).getBlock().getType();
 
-        if(block == target) {
-            return true;
-        }
-
-        return false;
+        return block == target;
     }
 
     public boolean isBlockFound(Player player) {
-        if(!this.existsPlayer(player)) {
+        if (!this.existsPlayer(player)) {
             return false;
         }
-        
-        if(!player.isOnline()) {
+
+        if (!player.isOnline()) {
             this.initializePlayer(player);
             return false;
         }
 
-        if(this.status.get(player) == STATUS_WAITING) {
+        if (this.status.get(player) == STATUS_WAITING) {
             return false;
-        }
-        else if(this.status.get(player) == STATUS_SUCCESS) {
+        } else if (this.status.get(player) == STATUS_SUCCESS) {
             return true;
         }
 
         boolean found = this.checkBlock(player);
 
-        if(found) {
+        if (found) {
             this.status.put(player, STATUS_SUCCESS);
         }
 
@@ -115,7 +110,7 @@ public class PlayerList {
     }
 
     public Material getBlockMaterial(Player player) {
-        if(!this.existsPlayer(player)) {
+        if (!this.existsPlayer(player)) {
             return null;
         }
 
@@ -123,7 +118,7 @@ public class PlayerList {
     }
 
     public String getBlock(Player player) {
-        if(!this.existsPlayer(player)) {
+        if (!this.existsPlayer(player)) {
             return "";
         }
 
@@ -131,17 +126,17 @@ public class PlayerList {
     }
 
     public int getStatus(Player player) {
-        if(!this.existsPlayer(player)) {
+        if (!this.existsPlayer(player)) {
             return STATUS_WAITING;
         }
 
         return this.status.get(player);
     }
-    
+
     public int getTotalStatus() {
         int totalStatus = STATUS_SUCCESS;
 
-        for(Player player: this.getPlayers()) {
+        for (Player player : this.getPlayers()) {
             totalStatus += this.getStatus(player);
         }
 

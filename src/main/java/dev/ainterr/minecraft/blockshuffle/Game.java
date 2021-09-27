@@ -1,5 +1,6 @@
 package dev.ainterr.minecraft.blockshuffle;
 
+import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -8,11 +9,14 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
-
 public final class Game extends JavaPlugin {
-    public PlayerList players = new PlayerList();
     private int interval = 300;
-    public GameMode mode = new DefaultGameMode();
+
+    @Getter
+    private final PlayerList players = new PlayerList();
+
+    @Getter
+    private GameMode mode = new DefaultGameMode();
 
     private boolean running = false;
 
@@ -35,7 +39,7 @@ public final class Game extends JavaPlugin {
                 new MovementListener(this), this
         );
 
-        new Countdown(this).runTaskTimer(this, this.interval * 20, 20);
+        new Countdown(this).runTaskTimer(this, this.interval * 20L, 20);
 
         this.running = true;
     }
