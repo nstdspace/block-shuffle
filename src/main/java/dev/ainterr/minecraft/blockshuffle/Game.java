@@ -10,7 +10,7 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class Game extends JavaPlugin {
-    private int interval = 300;
+    private int roundLengthInSeconds = 5;
 
     @Getter
     private final PlayerList players = new PlayerList();
@@ -39,7 +39,7 @@ public final class Game extends JavaPlugin {
                 new MovementListener(this), this
         );
 
-        new Countdown(this).runTaskTimer(this, this.interval * 20L, 20);
+        new Countdown(this).runTaskTimer(this, TickTimeConverterKt.secondsToTicks(this.roundLengthInSeconds), 20);
 
         this.running = true;
     }
@@ -126,8 +126,8 @@ public final class Game extends JavaPlugin {
                     }
 
                     try {
-                        this.interval = Integer.parseInt(args[1]);
-                        sender.sendMessage("BlockShuffle interval set to " + this.interval + "s");
+                        this.roundLengthInSeconds = Integer.parseInt(args[1]);
+                        sender.sendMessage("BlockShuffle interval set to " + this.roundLengthInSeconds + "s");
                     } catch (NumberFormatException error) {
                         sender.sendMessage("invalid interval value '" + args[1] + "'");
                     }
