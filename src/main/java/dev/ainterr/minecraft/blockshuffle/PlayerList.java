@@ -10,21 +10,19 @@ import org.bukkit.Location;
 
 
 public class PlayerList {
-    public static int RETURN_SUCCESS = 0;
-    public static int RETURN_FAILURE = 1;
+    public static final int RETURN_SUCCESS = 0;
+    public static final int RETURN_FAILURE = 1;
 
-    public static int STATUS_SUCCESS = 0;
-    public static int STATUS_FAILURE = 1;
-    public static int STATUS_WAITING = -1;
+    public static final int STATUS_SUCCESS = 0;
+    public static final int STATUS_FAILURE = 1;
+    public static final int STATUS_WAITING = -1;
 
-    private static BlockBlacklist BLACKLIST = new BlockBlacklist();
-
-    private HashMap<Player, Material> blocks = new HashMap<Player, Material>();
-    private HashMap<Player, Integer> status = new HashMap<Player, Integer>();
+    private final HashMap<Player, Material> blocks = new HashMap<>();
+    private final HashMap<Player, Integer> status = new HashMap<>();
 
     private void initializePlayer(Player player) {
         this.blocks.put(player, null);
-        this.status.put(player, this.STATUS_WAITING);
+        this.status.put(player, STATUS_WAITING);
     }
 
     public boolean existsPlayer(Player player) {
@@ -41,13 +39,13 @@ public class PlayerList {
 
     public int newBlock(Player player, Material selection) {
         if(!this.existsPlayer(player)) {
-            return this.RETURN_FAILURE;
+            return RETURN_FAILURE;
         }
         
         this.initializePlayer(player);
 
         if(!player.isOnline()) {
-            return this.RETURN_FAILURE;
+            return RETURN_FAILURE;
         }
 
         Random r = new Random();
@@ -55,15 +53,15 @@ public class PlayerList {
         while(selection == null) {
             selection = Material.values()[r.nextInt(Material.values().length)];
 
-            if (!selection.isBlock() || this.BLACKLIST.contains(selection)) {
+            if (!selection.isBlock() || BlockBlacklists.DEFAULT_BLACK_LIST.contains(selection)) {
                 selection = null;
             }
         }
 
         this.blocks.put(player, selection);
-        this.status.put(player, this.STATUS_FAILURE);
+        this.status.put(player, STATUS_FAILURE);
         
-        return this.RETURN_SUCCESS;
+        return RETURN_SUCCESS;
     }
 
     public int newBlock(Player player) {
@@ -100,17 +98,17 @@ public class PlayerList {
             return false;
         }
 
-        if(this.status.get(player) == this.STATUS_WAITING) {
+        if(this.status.get(player) == STATUS_WAITING) {
             return false;
         }
-        else if(this.status.get(player) == this.STATUS_SUCCESS) {
+        else if(this.status.get(player) == STATUS_SUCCESS) {
             return true;
         }
 
         boolean found = this.checkBlock(player);
 
         if(found) {
-            this.status.put(player, this.STATUS_SUCCESS);
+            this.status.put(player, STATUS_SUCCESS);
         }
 
         return found;
@@ -134,20 +132,20 @@ public class PlayerList {
 
     public int getStatus(Player player) {
         if(!this.existsPlayer(player)) {
-            return this.STATUS_WAITING;
+            return STATUS_WAITING;
         }
 
         return this.status.get(player);
     }
     
-    public int getAllStatus() {
-        int status = this.STATUS_SUCCESS;
+    public int getTotalStatus() {
+        int totalStatus = STATUS_SUCCESS;
 
         for(Player player: this.getPlayers()) {
-            status += this.getStatus(player);
+            totalStatus += this.getStatus(player);
         }
 
-        return status;
+        return totalStatus;
     }
 
     public Set<Player> getPlayers() {
