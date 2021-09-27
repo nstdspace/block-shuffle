@@ -1,9 +1,10 @@
-package dev.ainterr.minecraft.blockshuffle;
+package dev.ainterr.minecraft.blockshuffle.gamemodes;
 
+import dev.ainterr.minecraft.blockshuffle.PlayerList;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
-class RaceGameMode implements GameMode {
+public class RaceGameMode implements GameMode {
     private Material block;
 
     @Override

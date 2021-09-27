@@ -1,5 +1,8 @@
 package dev.ainterr.minecraft.blockshuffle;
 
+import dev.ainterr.minecraft.blockshuffle.gamemodes.DefaultGameMode;
+import dev.ainterr.minecraft.blockshuffle.gamemodes.GameMode;
+import dev.ainterr.minecraft.blockshuffle.gamemodes.RaceGameMode;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -8,6 +11,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.NotNull;
 
 public final class Game extends JavaPlugin {
     private int roundLengthInSeconds = 5;
@@ -80,7 +84,7 @@ public final class Game extends JavaPlugin {
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+    public boolean onCommand(@NotNull CommandSender sender, Command command, @NotNull String label, @NotNull String[] args) {
         if (command.getName().equalsIgnoreCase("block-shuffle-start")) {
             if (this.running) {
                 sender.sendMessage("BlockShuffle has already started");

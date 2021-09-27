@@ -1,8 +1,9 @@
-package dev.ainterr.minecraft.blockshuffle;
+package dev.ainterr.minecraft.blockshuffle.gamemodes;
 
+import dev.ainterr.minecraft.blockshuffle.PlayerList;
 import org.bukkit.entity.Player;
 
-interface GameMode {
+public interface GameMode {
     /**
      * Called when a round starts.
      * This is useful to reset the game mode's internals at the beginning of the

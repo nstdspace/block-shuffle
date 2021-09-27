@@ -1,5 +1,6 @@
-package dev.ainterr.minecraft.blockshuffle;
+package dev.ainterr.minecraft.blockshuffle.gamemodes;
 
+import dev.ainterr.minecraft.blockshuffle.PlayerList;
 import org.bukkit.entity.Player;
 
 public class DefaultGameMode implements GameMode {
