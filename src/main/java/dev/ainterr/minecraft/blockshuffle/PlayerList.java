@@ -1,20 +1,16 @@
 package dev.ainterr.minecraft.blockshuffle;
 
-import kotlin.collections.CollectionsKt;
-import kotlin.random.RandomKt;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
 
 public class PlayerList {
-    public static final int RETURN_SUCCESS = 0;
-    public static final int RETURN_FAILURE = 1;
-
     public static final int STATUS_SUCCESS = 0;
     public static final int STATUS_FAILURE = 1;
     public static final int STATUS_WAITING = -1;
@@ -39,30 +35,29 @@ public class PlayerList {
         this.initializePlayer(player);
     }
 
-    public int newBlock(Player player, Material selection) {
+    public void newBlock(Player player, Material selection) {
         if (!this.existsPlayer(player)) {
-            return RETURN_FAILURE;
+            return;
         }
 
         this.initializePlayer(player);
 
         if (!player.isOnline()) {
-            return RETURN_FAILURE;
+            return;
         }
 
         if (selection == null) {
             Random r = new Random();
-            selection = Material.values()[r.nextInt(Material.values().length)];
+            List<Material> targetBlocks = BlockSetsKt.getDefaultTargetBlocks();
+            selection = targetBlocks.get(r.nextInt(targetBlocks.size()));
         }
 
         this.blocks.put(player, selection);
         this.status.put(player, STATUS_FAILURE);
-
-        return RETURN_SUCCESS;
     }
 
-    public int newBlock(Player player) {
-        return this.newBlock(player, null);
+    public void newBlock(Player player) {
+        this.newBlock(player, null);
     }
 
     private boolean checkBlock(Player player) {

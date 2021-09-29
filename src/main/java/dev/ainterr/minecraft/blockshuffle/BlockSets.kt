@@ -175,7 +175,7 @@ val UnrealisticItems = setOf(
 )
 
 val DefaultBlacklist = UnobtainableItems union EndItems union UnrealisticItems
-val AllItems = Material.values().toSet()
+val AllItems = Material.values().toList()
 val AllBlocks = AllItems.filter(Material::isBlock)
 
 val DefaultTargetBlocks = AllBlocks.minus(DefaultBlacklist)
