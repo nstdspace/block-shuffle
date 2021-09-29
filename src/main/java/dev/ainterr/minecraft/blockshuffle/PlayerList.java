@@ -1,5 +1,7 @@
 package dev.ainterr.minecraft.blockshuffle;
 
+import kotlin.collections.CollectionsKt;
+import kotlin.random.RandomKt;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -48,14 +50,9 @@ public class PlayerList {
             return RETURN_FAILURE;
         }
 
-        Random r = new Random();
-
-        while (selection == null) {
+        if (selection == null) {
+            Random r = new Random();
             selection = Material.values()[r.nextInt(Material.values().length)];
-
-            if (!selection.isBlock() || BlockSetsKt.getDefaultBlacklist().contains(selection)) {
-                selection = null;
-            }
         }
 
         this.blocks.put(player, selection);

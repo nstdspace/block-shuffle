@@ -1,5 +1,6 @@
 package dev.ainterr.minecraft.blockshuffle
 
+import org.bukkit.Material
 import org.bukkit.Material.*
 
 val UnobtainableItems = setOf(
@@ -174,3 +175,7 @@ val UnrealisticItems = setOf(
 )
 
 val DefaultBlacklist = UnobtainableItems union EndItems union UnrealisticItems
+val AllItems = Material.values().toSet()
+val AllBlocks = AllItems.filter(Material::isBlock)
+
+val DefaultTargetBlocks = AllBlocks.minus(DefaultBlacklist)
