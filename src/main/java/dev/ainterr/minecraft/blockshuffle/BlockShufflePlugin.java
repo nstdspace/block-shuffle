@@ -63,7 +63,6 @@ public final class BlockShufflePlugin extends JavaPlugin {
 
         PlayerMoveEvent.getHandlerList().unregister(this);
         Bukkit.getScheduler().cancelTasks(this);
-
         this.running = false;
     }
 

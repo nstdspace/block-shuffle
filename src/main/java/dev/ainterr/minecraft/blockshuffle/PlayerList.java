@@ -53,7 +53,7 @@ public class PlayerList {
         while (selection == null) {
             selection = Material.values()[r.nextInt(Material.values().length)];
 
-            if (!selection.isBlock() || BlockBlacklists.DEFAULT_BLACK_LIST.contains(selection)) {
+            if (!selection.isBlock() || BlockSetsKt.getDefaultBlacklist().contains(selection)) {
                 selection = null;
             }
         }
