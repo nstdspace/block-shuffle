@@ -4,10 +4,10 @@ import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public class Countdown extends BukkitRunnable {
-    private final Game plugin;
+    private final BlockShufflePlugin plugin;
     private int timeUntilEnd;
 
-    public Countdown(Game plugin) {
+    public Countdown(BlockShufflePlugin plugin) {
         this.plugin = plugin;
         this.timeUntilEnd = 10;
     }

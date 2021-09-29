@@ -13,7 +13,7 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
-public final class Game extends JavaPlugin {
+public final class BlockShufflePlugin extends JavaPlugin {
     private int roundLengthInSeconds = 5;
 
     @Getter

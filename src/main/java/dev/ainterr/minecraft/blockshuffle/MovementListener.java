@@ -9,9 +9,9 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
 
 class MovementListener implements Listener {
-    private final Game plugin;
+    private final BlockShufflePlugin plugin;
 
-    public MovementListener(Game plugin) {
+    public MovementListener(BlockShufflePlugin plugin) {
         this.plugin = plugin;
     }
 
