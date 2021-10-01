@@ -16,7 +16,7 @@ class PlayerMoveListener(private val blockShufflePlugin: BlockShufflePlugin) : L
         val didPlayerFindTargetBlock = players.isBlockFound(player)
 
         if (didPlayerFindTargetBlock && playerStatus != PlayerList.STATUS_SUCCESS) {
-            Bukkit.broadcastMessage("${ChatColor.GOLD} $player.name found ${players.getBlock(player)}")
+            Bukkit.broadcastMessage("${ChatColor.GOLD} ${player.name} found ${players.getBlock(player)}")
             if (blockShufflePlugin.mode.isRoundOver(players)) {
                 blockShufflePlugin.endRound()
                 blockShufflePlugin.startRound()
