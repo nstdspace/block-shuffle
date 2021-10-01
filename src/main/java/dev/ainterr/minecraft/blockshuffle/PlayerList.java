@@ -48,7 +48,7 @@ public class PlayerList {
 
         if (selection == null) {
             Random r = new Random();
-            List<Material> targetBlocks = BlockSetsKt.getDefaultTargetBlocks();
+            List<Material> targetBlocks = BlockSetsKt.getSimpleTargetBlocks();
             selection = targetBlocks.get(r.nextInt(targetBlocks.size()));
         }
 
