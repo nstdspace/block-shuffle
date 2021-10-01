@@ -1,189 +1,150 @@
-package dev.ainterr.minecraft.blockshuffle;
+package dev.ainterr.minecraft.blockshuffle
 
-import dev.ainterr.minecraft.blockshuffle.gamemodes.DefaultGameMode;
-import dev.ainterr.minecraft.blockshuffle.gamemodes.GameMode;
-import dev.ainterr.minecraft.blockshuffle.gamemodes.RaceGameMode;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.plugin.java.JavaPlugin;
-import org.jetbrains.annotations.NotNull;
+import dev.ainterr.minecraft.blockshuffle.gamemodes.DefaultGameMode
+import dev.ainterr.minecraft.blockshuffle.gamemodes.GameMode
+import dev.ainterr.minecraft.blockshuffle.gamemodes.RaceGameMode
+import org.bukkit.Bukkit
+import org.bukkit.ChatColor
+import org.bukkit.command.Command
+import org.bukkit.command.CommandSender
+import org.bukkit.entity.Player
+import org.bukkit.event.player.PlayerMoveEvent
+import org.bukkit.plugin.java.JavaPlugin
 
-public final class BlockShufflePlugin extends JavaPlugin {
-    private int roundLengthInSeconds = 5;
+class BlockShufflePlugin : JavaPlugin() {
+    private var roundLengthInSeconds = 5
+    val players = PlayerList()
+    var mode: GameMode = DefaultGameMode()
+        private set
+    private var isRunning = false
 
-    public final PlayerList players = new PlayerList();
-
-    public GameMode getMode() {
-        return mode;
-    }
-
-    private GameMode mode = new DefaultGameMode();
-
-    private boolean running = false;
-
-    public void startRound() {
-        this.mode.startRound();
-
-        for (Player player : Bukkit.getServer().getOnlinePlayers()) {
-            this.players.addPlayer(player);
-
-            this.mode.assignBlock(this.players, player);
-            String block = this.players.getBlock(player);
-
+    fun startRound() {
+        mode.startRound()
+        for (player in Bukkit.getServer().onlinePlayers) {
+            players.addPlayer(player)
+            mode.assignBlock(players, player)
+            val block = players.getBlock(player)
             player.sendMessage(
-                    ChatColor.GREEN
-                            + player.getName() + " you must find " + block
-            );
+                ChatColor.GREEN
+                    .toString() + player.name + " you must find " + block
+            )
         }
-
-        getServer().getPluginManager().registerEvents(
-                new PlayerMoveListener(this), this
-        );
-
-        new RoundEndCountdown(this).runTaskTimer(
-                this,
-                TickTimeConverterKt.secondsToTicks(this.roundLengthInSeconds),
-                TickTimeConverterKt.TICKS_PER_SECOND
-        );
-
-        this.running = true;
+        server.pluginManager.registerEvents(
+            PlayerMoveListener(this), this
+        )
+        RoundEndCountdown(this).runTaskTimer(
+            this,
+            secondsToTicks(roundLengthInSeconds).toLong(),
+            TICKS_PER_SECOND
+                .toLong()
+        )
+        isRunning = true
     }
 
-    public void endRound(boolean grace) {
+    @JvmOverloads
+    fun endRound(grace: Boolean = false) {
         if (!grace) {
-            for (Player player : this.players.getPlayers()) {
-                if (this.players.getStatus(player) == PlayerList.STATUS_FAILURE) {
+            for (player in players.players) {
+                if (players.getStatus(player) == PlayerList.STATUS_FAILURE) {
                     Bukkit.broadcastMessage(
-                            ChatColor.RED
-                                    + player.getName() + " failed to find "
-                                    + this.players.getBlock(player)
-                    );
+                        ChatColor.RED
+                            .toString() + player.name + " failed to find "
+                                + players.getBlock(player)
+                    )
                 }
             }
         }
-
-        PlayerMoveEvent.getHandlerList().unregister(this);
-        Bukkit.getScheduler().cancelTasks(this);
-        this.running = false;
+        PlayerMoveEvent.getHandlerList().unregister(this)
+        Bukkit.getScheduler().cancelTasks(this)
+        isRunning = false
     }
 
-    public void endRound() {
-        this.endRound(false);
+    private fun startGame() {
+        Bukkit.broadcastMessage("welcome to BlockShuffle")
+        startRound()
     }
 
-    private void startGame() {
-        Bukkit.broadcastMessage("welcome to BlockShuffle");
-
-        this.startRound();
+    private fun stopGame() {
+        endRound(true)
+        Bukkit.broadcastMessage("BlockShuffle game over")
     }
 
-    private void stopGame() {
-        this.endRound(true);
-
-        Bukkit.broadcastMessage("BlockShuffle game over");
-    }
-
-    @Override
-    public boolean onCommand(@NotNull CommandSender sender, Command command, @NotNull String label, @NotNull String[] args) {
-        if (command.getName().equalsIgnoreCase("block-shuffle-start")) {
-            if (this.running) {
-                sender.sendMessage("BlockShuffle has already started");
-                return true;
+    override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<String>): Boolean {
+        if (command.name.equals("block-shuffle-start", ignoreCase = true)) {
+            if (isRunning) {
+                sender.sendMessage("BlockShuffle has already started")
+                return true
             }
-
-            this.startGame();
-
-            return true;
-        } else if (command.getName().equalsIgnoreCase("block-shuffle-stop")) {
-            if (!this.running) {
-                sender.sendMessage("you're not currently playing BlockShuffle");
-                return true;
+            startGame()
+            return true
+        } else if (command.name.equals("block-shuffle-stop", ignoreCase = true)) {
+            if (!isRunning) {
+                sender.sendMessage("you're not currently playing BlockShuffle")
+                return true
             }
-
-            this.stopGame();
-
-            return true;
-        } else if (command.getName().equalsIgnoreCase("block-shuffle-skip")) {
-            if (!this.running) {
-                sender.sendMessage("you're not currently playing BlockShuffle");
-                return true;
+            stopGame()
+            return true
+        } else if (command.name.equals("block-shuffle-skip", ignoreCase = true)) {
+            if (!isRunning) {
+                sender.sendMessage("you're not currently playing BlockShuffle")
+                return true
             }
-
-            this.endRound(true);
-            this.startRound();
-
-            return true;
-        } else if (command.getName().equalsIgnoreCase("block-shuffle-configure")) {
-            if (this.running) {
-                sender.sendMessage("a game of BlockShuffle is already in progress - stop the game to change configuration values");
-                return true;
+            endRound(true)
+            startRound()
+            return true
+        } else if (command.name.equals("block-shuffle-configure", ignoreCase = true)) {
+            if (isRunning) {
+                sender.sendMessage("a game of BlockShuffle is already in progress - stop the game to change configuration values")
+                return true
             }
-
-            if (args.length < 1) {
-                return false;
+            if (args.size < 1) {
+                return false
             }
-
-            switch (args[0]) {
-                case "interval":
-                    if (args.length != 2) {
-                        return false;
+            when (args[0]) {
+                "interval" -> {
+                    if (args.size != 2) {
+                        return false
                     }
-
                     try {
-                        this.roundLengthInSeconds = Integer.parseInt(args[1]);
-                        sender.sendMessage("BlockShuffle interval set to " + this.roundLengthInSeconds + "s");
-                    } catch (NumberFormatException error) {
-                        sender.sendMessage("invalid interval value '" + args[1] + "'");
+                        roundLengthInSeconds = args[1].toInt()
+                        sender.sendMessage("BlockShuffle interval set to " + roundLengthInSeconds + "s")
+                    } catch (error: NumberFormatException) {
+                        sender.sendMessage("invalid interval value '" + args[1] + "'")
                     }
-                    break;
-                case "mode":
-                    if (args.length != 2) {
-                        return false;
+                }
+                "mode" -> {
+                    if (args.size != 2) {
+                        return false
                     }
-
-                    switch (args[1]) {
-                        case "default":
-                            this.mode = new DefaultGameMode();
-                            sender.sendMessage("set the BlockShuffle game mode to 'default'");
-                            break;
-                        case "race":
-                            this.mode = new RaceGameMode();
-                            sender.sendMessage("set the BlockShuffle game mode to 'race'");
-                            break;
-                        default:
-                            sender.sendMessage("unknown game mode '" + args[1] + "' - available modes: default, race");
+                    when (args[1]) {
+                        "default" -> {
+                            mode = DefaultGameMode()
+                            sender.sendMessage("set the BlockShuffle game mode to 'default'")
+                        }
+                        "race" -> {
+                            mode = RaceGameMode()
+                            sender.sendMessage("set the BlockShuffle game mode to 'race'")
+                        }
+                        else -> sender.sendMessage("unknown game mode '" + args[1] + "' - available modes: default, race")
                     }
-                    break;
-                default:
-                    sender.sendMessage("unknown configuration parameter '" + args[0] + "'");
+                }
+                else -> sender.sendMessage("unknown configuration parameter '" + args[0] + "'")
             }
-
-            return true;
-        } else if (command.getName().equalsIgnoreCase("block-shuffle-block")) {
-            if (!this.running) {
-                sender.sendMessage("you're not currently playing BlockShuffle");
-                return true;
+            return true
+        } else if (command.name.equals("block-shuffle-block", ignoreCase = true)) {
+            if (!isRunning) {
+                sender.sendMessage("you're not currently playing BlockShuffle")
+                return true
             }
-
-            Player player = (Player) sender;
-
-            String block = this.players.getBlock(player);
-
-            if (block.equals("")) {
-                sender.sendMessage("you're not a player in the current game of BlockShuffle");
-                return true;
+            val player = sender as Player
+            val block = players.getBlock(player)
+            if (block == "") {
+                sender.sendMessage("you're not a player in the current game of BlockShuffle")
+                return true
             }
-
-            sender.sendMessage(player.getName() + " you must find " + block);
-            return true;
+            sender.sendMessage(player.name + " you must find " + block)
+            return true
         }
-
-        return false;
+        return false
     }
 }
-
-
