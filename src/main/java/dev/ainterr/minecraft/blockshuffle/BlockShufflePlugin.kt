@@ -1,7 +1,7 @@
 package dev.ainterr.minecraft.blockshuffle
 
+import dev.ainterr.minecraft.blockshuffle.gamemodes.AbstractGameMode
 import dev.ainterr.minecraft.blockshuffle.gamemodes.DefaultGameMode
-import dev.ainterr.minecraft.blockshuffle.gamemodes.GameMode
 import dev.ainterr.minecraft.blockshuffle.gamemodes.RaceGameMode
 import dev.ainterr.minecraft.blockshuffle.utils.scheduleActionAfterCountdown
 import org.bukkit.Bukkit
@@ -14,17 +14,16 @@ import org.bukkit.plugin.java.JavaPlugin
 
 class BlockShufflePlugin : JavaPlugin() {
     private var roundLengthInSeconds = 5
-    val players = PlayerData()
-    var mode: GameMode = DefaultGameMode()
+    var gameMode: AbstractGameMode = DefaultGameMode()
         private set
     private var isRunning = false
 
     fun startRound() {
-        mode.onRoundStart()
+        gameMode.onRoundStart()
         for (player in Bukkit.getServer().onlinePlayers) {
-            players.addPlayer(player)
-            mode.assignBlock(players, player)
-            val block = players.getBlock(player)
+            gameMode.playerData.addPlayer(player)
+            gameMode.assignBlock(gameMode.playerData, player)
+            val block = gameMode.playerData.getBlock(player)
             player.sendMessage(
                 ChatColor.GREEN
                     .toString() + player.name + " you must find " + block
@@ -52,12 +51,12 @@ class BlockShufflePlugin : JavaPlugin() {
     @JvmOverloads
     fun endRound(grace: Boolean = false) {
         if (!grace) {
-            for (player in players.players) {
-                if (players.getStatus(player) == PlayerData.STATUS_FAILURE) {
+            for (player in gameMode.playerData.players) {
+                if (gameMode.playerData.getStatus(player) == PlayerData.STATUS_FAILURE) {
                     Bukkit.broadcastMessage(
                         ChatColor.RED
                             .toString() + player.name + " failed to find "
-                                + players.getBlock(player)
+                                + gameMode.playerData.getBlock(player)
                     )
                 }
             }
@@ -126,11 +125,11 @@ class BlockShufflePlugin : JavaPlugin() {
                     }
                     when (args[1]) {
                         "default" -> {
-                            mode = DefaultGameMode()
+                            gameMode = DefaultGameMode()
                             sender.sendMessage("set the BlockShuffle game mode to 'default'")
                         }
                         "race" -> {
-                            mode = RaceGameMode()
+                            gameMode = RaceGameMode()
                             sender.sendMessage("set the BlockShuffle game mode to 'race'")
                         }
                         else -> sender.sendMessage("unknown game mode '" + args[1] + "' - available modes: default, race")
@@ -145,7 +144,7 @@ class BlockShufflePlugin : JavaPlugin() {
                 return true
             }
             val player = sender as Player
-            val block = players.getBlock(player)
+            val block = gameMode.playerData.getBlock(player)
             if (block == "") {
                 sender.sendMessage("you're not a player in the current game of BlockShuffle")
                 return true
