@@ -1,137 +1,112 @@
-package dev.ainterr.minecraft.blockshuffle;
+package dev.ainterr.minecraft.blockshuffle
 
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.block.BlockFace;
-import org.bukkit.entity.Player;
+import org.bukkit.Material
+import org.bukkit.block.BlockFace
+import org.bukkit.entity.Player
+import java.util.*
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Random;
-import java.util.Set;
+class PlayerList {
+    private val blocks = HashMap<Player, Material?>()
+    private val status = HashMap<Player, Int>()
 
+    val players: Set<Player>
+        get() = status.keys
 
-public class PlayerList {
-    public static final int STATUS_SUCCESS = 0;
-    public static final int STATUS_FAILURE = 1;
-    public static final int STATUS_WAITING = -1;
-
-    private final HashMap<Player, Material> blocks = new HashMap<>();
-    private final HashMap<Player, Integer> status = new HashMap<>();
-
-    private void initializePlayer(Player player) {
-        this.blocks.put(player, null);
-        this.status.put(player, STATUS_WAITING);
+    private fun initializePlayer(player: Player) {
+        blocks[player] = null
+        status[player] = STATUS_WAITING
     }
 
-    public boolean existsPlayer(Player player) {
-        return this.status.containsKey(player);
+    private fun existsPlayer(player: Player): Boolean {
+        return status.containsKey(player)
     }
 
-    public void addPlayer(Player player) {
-        if (this.existsPlayer(player)) {
-            return;
+    fun addPlayer(player: Player) {
+        if (existsPlayer(player)) {
+            return
         }
-
-        this.initializePlayer(player);
+        initializePlayer(player)
     }
 
-    public void newBlock(Player player, Material selection) {
-        if (!this.existsPlayer(player)) {
-            return;
+    fun newBlock(player: Player, selection: Material?) {
+        var newSelection = selection
+        if (!existsPlayer(player)) {
+            return
         }
-
-        this.initializePlayer(player);
-
-        if (!player.isOnline()) {
-            return;
+        initializePlayer(player)
+        if (!player.isOnline) {
+            return
         }
-
-        if (selection == null) {
-            Random r = new Random();
-            List<Material> targetBlocks = BlockSetsKt.getSimpleTargetBlocks();
-            selection = targetBlocks.get(r.nextInt(targetBlocks.size()));
+        if (newSelection == null) {
+            val r = Random()
+            val targetBlocks = SimpleTargetBlocks
+            newSelection = targetBlocks[r.nextInt(targetBlocks.size)]
         }
-
-        this.blocks.put(player, selection);
-        this.status.put(player, STATUS_FAILURE);
+        blocks[player] = newSelection
+        status[player] = STATUS_FAILURE
     }
 
-    private boolean checkBlock(Player player) {
-        Location playerLocation = player.getLocation();
-
-        Material target = this.blocks.get(player);
-
-        Material block = playerLocation.getBlock().getType();
-
+    private fun checkBlock(player: Player): Boolean {
+        val playerLocation = player.location
+        val target = blocks[player]
+        val block = playerLocation.block.type
         if (block == target) {
-            return true;
+            return true
         }
-
-        Material materialUnderPlayer = playerLocation.getBlock().getRelative(BlockFace.DOWN).getType();
-        return materialUnderPlayer == target;
+        val materialUnderPlayer = playerLocation.block.getRelative(BlockFace.DOWN).type
+        return materialUnderPlayer == target
     }
 
-    public boolean isBlockFound(Player player) {
-        if (!this.existsPlayer(player)) {
-            return false;
+    fun isBlockFound(player: Player): Boolean {
+        if (!existsPlayer(player)) {
+            return false
         }
-
-        if (!player.isOnline()) {
-            this.initializePlayer(player);
-            return false;
+        if (!player.isOnline) {
+            initializePlayer(player)
+            return false
         }
-
-        if (this.status.get(player) == STATUS_WAITING) {
-            return false;
-        } else if (this.status.get(player) == STATUS_SUCCESS) {
-            return true;
+        if (status[player] == STATUS_WAITING) {
+            return false
+        } else if (status[player] == STATUS_SUCCESS) {
+            return true
         }
-
-        boolean found = this.checkBlock(player);
-
+        val found = checkBlock(player)
         if (found) {
-            this.status.put(player, STATUS_SUCCESS);
+            status[player] = STATUS_SUCCESS
         }
-
-        return found;
+        return found
     }
 
-    public Material getBlockMaterial(Player player) {
-        if (!this.existsPlayer(player)) {
-            return null;
-        }
-
-        return this.blocks.get(player);
+    fun getBlockMaterial(player: Player): Material? {
+        return if (!existsPlayer(player)) {
+            null
+        } else blocks[player]
     }
 
-    public String getBlock(Player player) {
-        if (!this.existsPlayer(player)) {
-            return "";
-        }
-
-        return this.blocks.get(player).toString().replace('_', ' ');
+    fun getBlock(player: Player): String {
+        return if (!existsPlayer(player)) {
+            ""
+        } else blocks[player].toString().replace('_', ' ')
     }
 
-    public int getStatus(Player player) {
-        if (!this.existsPlayer(player)) {
-            return STATUS_WAITING;
-        }
-
-        return this.status.get(player);
+    fun getStatus(player: Player): Int {
+        return if (!existsPlayer(player)) {
+            STATUS_WAITING
+        } else status[player]!!
     }
 
-    public int getTotalStatus() {
-        int totalStatus = STATUS_SUCCESS;
-
-        for (Player player : this.getPlayers()) {
-            totalStatus += this.getStatus(player);
+    val totalStatus: Int
+        get() {
+            var totalStatus = STATUS_SUCCESS
+            for (player in players) {
+                totalStatus += getStatus(player)
+            }
+            return totalStatus
         }
 
-        return totalStatus;
-    }
-
-    public Set<Player> getPlayers() {
-        return this.status.keySet();
+    companion object {
+        const val STATUS_SUCCESS = 0
+        const val STATUS_FAILURE = 1
+        const val STATUS_WAITING = -1
     }
 }
