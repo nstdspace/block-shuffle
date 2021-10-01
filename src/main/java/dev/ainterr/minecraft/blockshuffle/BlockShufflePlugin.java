@@ -40,7 +40,7 @@ public final class BlockShufflePlugin extends JavaPlugin {
         }
 
         getServer().getPluginManager().registerEvents(
-                new MovementListener(this), this
+                new PlayerMoveListener(this), this
         );
 
         new Countdown(this).runTaskTimer(this, TickTimeConverterKt.secondsToTicks(this.roundLengthInSeconds), 20);
