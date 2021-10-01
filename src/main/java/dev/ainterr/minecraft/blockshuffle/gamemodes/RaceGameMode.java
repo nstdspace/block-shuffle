@@ -8,7 +8,7 @@ public class RaceGameMode implements GameMode {
     private Material block;
 
     @Override
-    public void startRound() {
+    public void onRoundStart() {
         this.block = null;
     }
 

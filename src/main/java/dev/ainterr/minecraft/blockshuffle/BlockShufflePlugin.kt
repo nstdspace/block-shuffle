@@ -20,7 +20,7 @@ class BlockShufflePlugin : JavaPlugin() {
     private var isRunning = false
 
     fun startRound() {
-        mode.startRound()
+        mode.onRoundStart()
         for (player in Bukkit.getServer().onlinePlayers) {
             players.addPlayer(player)
             mode.assignBlock(players, player)

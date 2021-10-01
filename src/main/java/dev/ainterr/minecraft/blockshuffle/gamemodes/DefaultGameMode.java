@@ -11,4 +11,9 @@ public class DefaultGameMode implements GameMode {
     public boolean isRoundOver(PlayerList players) {
         return players.getTotalStatus() == PlayerList.STATUS_SUCCESS;
     }
+
+    @Override
+    public void onRoundStart() {
+
+    }
 }
