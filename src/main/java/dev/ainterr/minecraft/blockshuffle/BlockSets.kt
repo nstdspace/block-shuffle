@@ -179,3 +179,5 @@ val AllItems = Material.values().toList()
 val AllBlocks = AllItems.filter(Material::isBlock)
 
 val DefaultTargetBlocks = AllBlocks.minus(DefaultBlacklist)
+
+val SimpleTargetBlocks = listOf(DIRT, COBBLESTONE)
