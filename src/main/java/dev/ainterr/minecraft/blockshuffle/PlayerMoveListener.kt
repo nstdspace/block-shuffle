@@ -8,14 +8,16 @@ import org.bukkit.event.player.PlayerMoveEvent
 class PlayerMoveListener(private val blockShufflePlugin: BlockShufflePlugin) : Listener {
     @EventHandler
     fun onPlayerMove(playerMoveEvent: PlayerMoveEvent) {
+        val gameMode = blockShufflePlugin.currentGameMode ?: return
+
         val player: Player = playerMoveEvent.player
-        val players: PlayerData = blockShufflePlugin.currentGameMode.playerData
+        val players: PlayerData = gameMode.playerData
         val playerStatus = players.getStatus(player)
         val didPlayerFindTargetBlock = players.isBlockFound(player)
 
         if (didPlayerFindTargetBlock && playerStatus != PlayerData.STATUS_SUCCESS) {
             broadcastSuccessMessage("${player.name} found ${players.getBlock(player)}")
-            if (blockShufflePlugin.currentGameMode.isRoundOver(players)) {
+            if (gameMode.isRoundOver(players)) {
                 blockShufflePlugin.endRound()
                 blockShufflePlugin.startRound()
             }
