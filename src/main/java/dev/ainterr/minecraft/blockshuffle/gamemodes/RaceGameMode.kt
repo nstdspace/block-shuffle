@@ -11,7 +11,7 @@ class RaceGameMode : AbstractGameMode() {
         block = null
     }
 
-    override fun assignBlock(players: PlayerList, player: Player?) {
+    override fun assignBlock(players: PlayerList, player: Player) {
         if (block == null) {
             players.newBlock(player, null)
             block = players.getBlockMaterial(player)

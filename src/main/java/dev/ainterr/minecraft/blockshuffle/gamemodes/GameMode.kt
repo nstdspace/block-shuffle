@@ -9,5 +9,5 @@ interface GameMode {
     /**
      * Called for each active player at round start.
      */
-    fun assignBlock(players: PlayerList, player: Player?)
+    fun assignBlock(players: PlayerList, player: Player)
 }
