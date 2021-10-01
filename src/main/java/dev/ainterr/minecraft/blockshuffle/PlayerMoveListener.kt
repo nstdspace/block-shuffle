@@ -1,7 +1,5 @@
 package dev.ainterr.minecraft.blockshuffle
 
-import org.bukkit.Bukkit
-import org.bukkit.ChatColor
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -16,7 +14,7 @@ class PlayerMoveListener(private val blockShufflePlugin: BlockShufflePlugin) : L
         val didPlayerFindTargetBlock = players.isBlockFound(player)
 
         if (didPlayerFindTargetBlock && playerStatus != PlayerList.STATUS_SUCCESS) {
-            Bukkit.broadcastMessage("${ChatColor.GOLD} ${player.name} found ${players.getBlock(player)}")
+            broadcastSuccessMessage("${player.name} found ${players.getBlock(player)}")
             if (blockShufflePlugin.mode.isRoundOver(players)) {
                 blockShufflePlugin.endRound()
                 blockShufflePlugin.startRound()
