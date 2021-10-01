@@ -1,14 +1,14 @@
 package dev.ainterr.minecraft.blockshuffle.gamemodes
 
-import dev.ainterr.minecraft.blockshuffle.PlayerList
+import dev.ainterr.minecraft.blockshuffle.PlayerData
 import org.bukkit.entity.Player
 
 class DefaultGameMode : AbstractGameMode() {
-    override fun assignBlock(players: PlayerList, player: Player) {
+    override fun assignBlock(players: PlayerData, player: Player) {
         players.newBlock(player, null)
     }
 
-    override fun isRoundOver(players: PlayerList): Boolean {
-        return players.totalStatus == PlayerList.STATUS_SUCCESS
+    override fun isRoundOver(players: PlayerData): Boolean {
+        return players.totalStatus == PlayerData.STATUS_SUCCESS
     }
 }

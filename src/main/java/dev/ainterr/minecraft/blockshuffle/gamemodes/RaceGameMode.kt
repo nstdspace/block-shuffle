@@ -1,6 +1,6 @@
 package dev.ainterr.minecraft.blockshuffle.gamemodes
 
-import dev.ainterr.minecraft.blockshuffle.PlayerList
+import dev.ainterr.minecraft.blockshuffle.PlayerData
 import org.bukkit.Material
 import org.bukkit.entity.Player
 
@@ -11,7 +11,7 @@ class RaceGameMode : AbstractGameMode() {
         block = null
     }
 
-    override fun assignBlock(players: PlayerList, player: Player) {
+    override fun assignBlock(players: PlayerData, player: Player) {
         if (block == null) {
             players.newBlock(player, null)
             block = players.getBlockMaterial(player)
@@ -20,7 +20,7 @@ class RaceGameMode : AbstractGameMode() {
         }
     }
 
-    override fun isRoundOver(players: PlayerList): Boolean {
+    override fun isRoundOver(players: PlayerData): Boolean {
         return true
     }
 }

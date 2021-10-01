@@ -5,7 +5,7 @@ import org.bukkit.block.BlockFace
 import org.bukkit.entity.Player
 import java.util.*
 
-class PlayerList {
+class PlayerData {
     private val blocks = HashMap<Player, Material?>()
     private val status = HashMap<Player, Int>()
 

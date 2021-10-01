@@ -14,7 +14,7 @@ import org.bukkit.plugin.java.JavaPlugin
 
 class BlockShufflePlugin : JavaPlugin() {
     private var roundLengthInSeconds = 5
-    val players = PlayerList()
+    val players = PlayerData()
     var mode: GameMode = DefaultGameMode()
         private set
     private var isRunning = false
@@ -53,7 +53,7 @@ class BlockShufflePlugin : JavaPlugin() {
     fun endRound(grace: Boolean = false) {
         if (!grace) {
             for (player in players.players) {
-                if (players.getStatus(player) == PlayerList.STATUS_FAILURE) {
+                if (players.getStatus(player) == PlayerData.STATUS_FAILURE) {
                     Bukkit.broadcastMessage(
                         ChatColor.RED
                             .toString() + player.name + " failed to find "
