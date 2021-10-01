@@ -57,10 +57,6 @@ public class PlayerList {
         this.status.put(player, STATUS_FAILURE);
     }
 
-    public void newBlock(Player player) {
-        this.newBlock(player, null);
-    }
-
     private boolean checkBlock(Player player) {
         Location playerLocation = player.getLocation();
 

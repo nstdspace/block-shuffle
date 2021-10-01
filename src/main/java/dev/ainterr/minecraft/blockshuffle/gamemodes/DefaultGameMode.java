@@ -5,7 +5,7 @@ import org.bukkit.entity.Player;
 
 public class DefaultGameMode implements GameMode {
     public void assignBlock(PlayerList players, Player player) {
-        players.newBlock(player);
+        players.newBlock(player, null);
     }
 
     public boolean isRoundOver(PlayerList players) {

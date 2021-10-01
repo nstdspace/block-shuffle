@@ -14,7 +14,7 @@ public class RaceGameMode implements GameMode {
 
     public void assignBlock(PlayerList players, Player player) {
         if (this.block == null) {
-            players.newBlock(player);
+            players.newBlock(player, null);
             this.block = players.getBlockMaterial(player);
         } else {
             players.newBlock(player, this.block);
