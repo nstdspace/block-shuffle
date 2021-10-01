@@ -3,6 +3,7 @@ package dev.ainterr.minecraft.blockshuffle
 import dev.ainterr.minecraft.blockshuffle.gamemodes.DefaultGameMode
 import dev.ainterr.minecraft.blockshuffle.gamemodes.GameMode
 import dev.ainterr.minecraft.blockshuffle.gamemodes.RaceGameMode
+import dev.ainterr.minecraft.blockshuffle.utils.scheduleActionAfterCountdown
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.command.Command
@@ -32,12 +33,19 @@ class BlockShufflePlugin : JavaPlugin() {
         server.pluginManager.registerEvents(
             PlayerMoveListener(this), this
         )
-        RoundEndCountdown(this).runTaskTimer(
-            this,
-            secondsToTicks(roundLengthInSeconds).toLong(),
-            TICKS_PER_SECOND
-                .toLong()
+
+        scheduleActionAfterCountdown(
+            countdownTimeInSeconds = 10,
+            delayInSeconds = roundLengthInSeconds,
+            countdownCallback = { seconds ->
+                broadcastMessage("BlockShuffle round over in $seconds ...")
+            },
+            actionAfterCountdown = {
+                endRound()
+                startRound()
+            }
         )
+
         isRunning = true
     }
 
