@@ -4,7 +4,7 @@ import dev.ainterr.minecraft.blockshuffle.PlayerList;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
-public class RaceGameMode implements GameMode {
+public class RaceGameMode extends AbstractGameMode {
     private Material block;
 
     @Override
@@ -12,6 +12,7 @@ public class RaceGameMode implements GameMode {
         this.block = null;
     }
 
+    @Override
     public void assignBlock(PlayerList players, Player player) {
         if (this.block == null) {
             players.newBlock(player, null);
@@ -21,6 +22,7 @@ public class RaceGameMode implements GameMode {
         }
     }
 
+    @Override
     public boolean isRoundOver(PlayerList players) {
         return true;
     }
