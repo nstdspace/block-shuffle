@@ -3,7 +3,6 @@ package dev.ainterr.minecraft.blockshuffle;
 import dev.ainterr.minecraft.blockshuffle.gamemodes.DefaultGameMode;
 import dev.ainterr.minecraft.blockshuffle.gamemodes.GameMode;
 import dev.ainterr.minecraft.blockshuffle.gamemodes.RaceGameMode;
-import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
