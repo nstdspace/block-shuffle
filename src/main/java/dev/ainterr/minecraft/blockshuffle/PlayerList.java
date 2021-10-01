@@ -2,6 +2,7 @@ package dev.ainterr.minecraft.blockshuffle;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;
@@ -61,19 +62,18 @@ public class PlayerList {
     }
 
     private boolean checkBlock(Player player) {
-        Location location = player.getLocation();
+        Location playerLocation = player.getLocation();
 
         Material target = this.blocks.get(player);
 
-        Material block = location.getBlock().getType();
+        Material block = playerLocation.getBlock().getType();
 
         if (block == target) {
             return true;
         }
 
-        block = location.clone().subtract(0, 1, 0).getBlock().getType();
-
-        return block == target;
+        Material materialUnderPlayer = playerLocation.getBlock().getRelative(BlockFace.DOWN).getType();
+        return materialUnderPlayer == target;
     }
 
     public boolean isBlockFound(Player player) {
