@@ -5,9 +5,9 @@ import org.bukkit.entity.Player
 
 interface GameMode {
     fun onRoundStart()
-    fun isRoundOver(players: PlayerList?): Boolean
+    fun isRoundOver(players: PlayerList): Boolean
     /**
      * Called for each active player at round start.
      */
-    fun assignBlock(players: PlayerList?, player: Player?)
+    fun assignBlock(players: PlayerList, player: Player?)
 }

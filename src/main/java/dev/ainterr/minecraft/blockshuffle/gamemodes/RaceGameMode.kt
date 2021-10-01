@@ -1,29 +1,26 @@
-package dev.ainterr.minecraft.blockshuffle.gamemodes;
+package dev.ainterr.minecraft.blockshuffle.gamemodes
 
-import dev.ainterr.minecraft.blockshuffle.PlayerList;
-import org.bukkit.Material;
-import org.bukkit.entity.Player;
+import dev.ainterr.minecraft.blockshuffle.PlayerList
+import org.bukkit.Material
+import org.bukkit.entity.Player
 
-public class RaceGameMode extends AbstractGameMode {
-    private Material block;
+class RaceGameMode : AbstractGameMode() {
+    private var block: Material? = null
 
-    @Override
-    public void onRoundStart() {
-        this.block = null;
+    override fun onRoundStart() {
+        block = null
     }
 
-    @Override
-    public void assignBlock(PlayerList players, Player player) {
-        if (this.block == null) {
-            players.newBlock(player, null);
-            this.block = players.getBlockMaterial(player);
+    override fun assignBlock(players: PlayerList, player: Player?) {
+        if (block == null) {
+            players.newBlock(player, null)
+            block = players.getBlockMaterial(player)
         } else {
-            players.newBlock(player, this.block);
+            players.newBlock(player, block)
         }
     }
 
-    @Override
-    public boolean isRoundOver(PlayerList players) {
-        return true;
+    override fun isRoundOver(players: PlayerList): Boolean {
+        return true
     }
 }
