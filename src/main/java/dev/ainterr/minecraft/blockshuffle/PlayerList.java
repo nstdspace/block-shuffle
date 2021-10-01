@@ -65,7 +65,7 @@ public class PlayerList {
 
         Material target = this.blocks.get(player);
 
-         Material block = location.getBlock().getType();
+        Material block = location.getBlock().getType();
 
         if (block == target) {
             return true;
