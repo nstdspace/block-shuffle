@@ -3,11 +3,11 @@ package dev.ainterr.minecraft.blockshuffle;
 import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitRunnable;
 
-public class Countdown extends BukkitRunnable {
+public class RoundEndCountdown extends BukkitRunnable {
     private final BlockShufflePlugin plugin;
     private int secondsUntilRoundEnd;
 
-    public Countdown(BlockShufflePlugin plugin) {
+    public RoundEndCountdown(BlockShufflePlugin plugin) {
         this.plugin = plugin;
         this.secondsUntilRoundEnd = 10;
     }
