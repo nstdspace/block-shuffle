@@ -16,10 +16,12 @@ import org.jetbrains.annotations.NotNull;
 public final class BlockShufflePlugin extends JavaPlugin {
     private int roundLengthInSeconds = 5;
 
-    @Getter
-    private final PlayerList players = new PlayerList();
+    public final PlayerList players = new PlayerList();
 
-    @Getter
+    public GameMode getMode() {
+        return mode;
+    }
+
     private GameMode mode = new DefaultGameMode();
 
     private boolean running = false;
