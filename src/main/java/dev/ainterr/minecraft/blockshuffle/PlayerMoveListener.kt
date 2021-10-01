@@ -9,13 +9,13 @@ class PlayerMoveListener(private val blockShufflePlugin: BlockShufflePlugin) : L
     @EventHandler
     fun onPlayerMove(playerMoveEvent: PlayerMoveEvent) {
         val player: Player = playerMoveEvent.player
-        val players: PlayerData = blockShufflePlugin.gameMode.playerData
+        val players: PlayerData = blockShufflePlugin.currentGameMode.playerData
         val playerStatus = players.getStatus(player)
         val didPlayerFindTargetBlock = players.isBlockFound(player)
 
         if (didPlayerFindTargetBlock && playerStatus != PlayerData.STATUS_SUCCESS) {
             broadcastSuccessMessage("${player.name} found ${players.getBlock(player)}")
-            if (blockShufflePlugin.gameMode.isRoundOver(players)) {
+            if (blockShufflePlugin.currentGameMode.isRoundOver(players)) {
                 blockShufflePlugin.endRound()
                 blockShufflePlugin.startRound()
             }

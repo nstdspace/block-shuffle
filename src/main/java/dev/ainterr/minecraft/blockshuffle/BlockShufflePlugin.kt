@@ -2,6 +2,7 @@ package dev.ainterr.minecraft.blockshuffle
 
 import dev.ainterr.minecraft.blockshuffle.gamemodes.AbstractGameMode
 import dev.ainterr.minecraft.blockshuffle.gamemodes.DefaultGameMode
+import dev.ainterr.minecraft.blockshuffle.gamemodes.GameModeType
 import dev.ainterr.minecraft.blockshuffle.gamemodes.RaceGameMode
 import dev.ainterr.minecraft.blockshuffle.utils.scheduleActionAfterCountdown
 import org.bukkit.Bukkit
@@ -14,11 +15,19 @@ import org.bukkit.plugin.java.JavaPlugin
 
 class BlockShufflePlugin : JavaPlugin() {
     private var roundLengthInSeconds = 5
-    var gameMode: AbstractGameMode = DefaultGameMode()
+    var currentGameMode: AbstractGameMode? = null
         private set
     private var isRunning = false
+    private var configuredGameModeType: GameModeType = GameModeType.DEFAULT
+
+    private fun createGameMode(type: GameModeType): AbstractGameMode = when(type) {
+        GameModeType.DEFAULT -> DefaultGameMode()
+        GameModeType.RACE -> RaceGameMode()
+    }
 
     fun startRound() {
+        val gameMode = currentGameMode ?: return
+
         gameMode.onRoundStart()
         for (player in Bukkit.getServer().onlinePlayers) {
             gameMode.playerData.addPlayer(player)
@@ -50,6 +59,8 @@ class BlockShufflePlugin : JavaPlugin() {
 
     @JvmOverloads
     fun endRound(grace: Boolean = false) {
+        val gameMode = currentGameMode ?: return
+
         if (!grace) {
             for (player in gameMode.playerData.players) {
                 if (gameMode.playerData.getStatus(player) == PlayerData.STATUS_FAILURE) {
@@ -67,6 +78,7 @@ class BlockShufflePlugin : JavaPlugin() {
     }
 
     private fun startGame() {
+        currentGameMode = createGameMode(configuredGameModeType)
         Bukkit.broadcastMessage("welcome to BlockShuffle")
         startRound()
     }
@@ -86,14 +98,14 @@ class BlockShufflePlugin : JavaPlugin() {
             return true
         } else if (command.name.equals("block-shuffle-stop", ignoreCase = true)) {
             if (!isRunning) {
-                sender.sendMessage("you're not currently playing BlockShuffle")
+                sender.sendNotInGameMessage()
                 return true
             }
             stopGame()
             return true
         } else if (command.name.equals("block-shuffle-skip", ignoreCase = true)) {
             if (!isRunning) {
-                sender.sendMessage("you're not currently playing BlockShuffle")
+                sender.sendNotInGameMessage()
                 return true
             }
             endRound(true)
@@ -125,11 +137,11 @@ class BlockShufflePlugin : JavaPlugin() {
                     }
                     when (args[1]) {
                         "default" -> {
-                            gameMode = DefaultGameMode()
+                            currentGameMode = DefaultGameMode()
                             sender.sendMessage("set the BlockShuffle game mode to 'default'")
                         }
                         "race" -> {
-                            gameMode = RaceGameMode()
+                            currentGameMode = RaceGameMode()
                             sender.sendMessage("set the BlockShuffle game mode to 'race'")
                         }
                         else -> sender.sendMessage("unknown game mode '" + args[1] + "' - available modes: default, race")
@@ -139,7 +151,8 @@ class BlockShufflePlugin : JavaPlugin() {
             }
             return true
         } else if (command.name.equals("block-shuffle-block", ignoreCase = true)) {
-            if (!isRunning) {
+            val gameMode = currentGameMode
+            if (gameMode == null) {
                 sender.sendMessage("you're not currently playing BlockShuffle")
                 return true
             }
