@@ -28,10 +28,7 @@ class BlockShufflePlugin : JavaPlugin() {
             gameMode.playerData.addPlayer(player)
             gameMode.assignBlock(gameMode.playerData, player)
             val block = gameMode.playerData.getBlock(player)
-            player.sendMessage(
-                ChatColor.GREEN
-                    .toString() + player.name + " you must find " + block
-            )
+            player.sendGameInfoMessage("${player.name} you must find $block")
         }
         server.pluginManager.registerEvents(
             PlayerMoveListener(this), this
@@ -111,7 +108,7 @@ class BlockShufflePlugin : JavaPlugin() {
                 sender.sendMessage("a game of BlockShuffle is already in progress - stop the game to change configuration values")
                 return true
             }
-            if (args.size < 1) {
+            if (args.isEmpty()) {
                 return false
             }
             when (args[0]) {
