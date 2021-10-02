@@ -20,11 +20,6 @@ class BlockShufflePlugin : JavaPlugin() {
     private var isRunning = false
     private var configuredGameModeType: GameModeType = GameModeType.DEFAULT
 
-    private fun createGameMode(type: GameModeType): AbstractGameMode = when(type) {
-        GameModeType.DEFAULT -> DefaultGameMode()
-        GameModeType.RACE -> RaceGameMode()
-    }
-
     fun startRound() {
         val gameMode = currentGameMode ?: return
 
@@ -78,7 +73,7 @@ class BlockShufflePlugin : JavaPlugin() {
     }
 
     private fun startGame() {
-        currentGameMode = createGameMode(configuredGameModeType)
+        currentGameMode = AbstractGameMode.create(configuredGameModeType)
         Bukkit.broadcastMessage("welcome to BlockShuffle")
         startRound()
     }

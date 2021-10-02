@@ -8,4 +8,11 @@ abstract class AbstractGameMode : GameMode {
     override fun onRoundStart() {
         // do nothing
     }
+
+    companion object {
+        fun create(type: GameModeType): AbstractGameMode = when(type) {
+            GameModeType.DEFAULT -> DefaultGameMode()
+            GameModeType.RACE -> RaceGameMode()
+        }
+    }
 }
